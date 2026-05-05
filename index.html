@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wander — Family Hiking Adventures</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Base ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #F7F6F2;
+  color: #2C2C2A;
+  overflow-x: hidden;
+}
+
+/* ── CSS Variables ──────────────────────────────────── */
+:root {
+  --forest: #1D9E75;
+  --deep: #085041;
+  --mid: #0F6E56;
+  --mist: #E1F5EE;
+  --bark: #854F0B;
+  --bark-light: #FAEEDA;
+  --dawn: #D85A30;
+  --stone: #888780;
+  --off-white: #F7F6F2;
+  --white: #FFFFFF;
+  --dark: #2C2C2A;
+  --mid-gray: #5F5E5A;
+  --light-gray: #E8E7E2;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+/* ── Animations ─────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.4; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ── Navigation ─────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 48px;
+  background: rgba(247, 246, 242, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(29,158,117,0.1);
+  transition: all 0.3s ease;
+}
+nav.scrolled {
+  padding: 12px 48px;
+  box-shadow: 0 2px 24px rgba(8,80,65,0.08);
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-mark {
+  width: 36px; height: 36px;
+  background: var(--forest);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--white);
+  letter-spacing: -1px;
+  transition: transform 0.2s;
+}
+.nav-logo:hover .nav-logo-mark { transform: rotate(-5deg) scale(1.05); }
+.nav-logo-name {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark);
+  letter-spacing: -0.3px;
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.nav-link {
+  font-size: 14px;
+  color: var(--mid-gray);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+.nav-link:hover { color: var(--forest); }
+.nav-cta {
+  background: var(--forest);
+  color: var(--white);
+  border: none;
+  border-radius: 24px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.nav-cta:hover {
+  background: var(--deep);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(29,158,117,0.35);
+}
+
+/* ── Hero ───────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  background: var(--deep);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 48px 80px;
+  overflow: hidden;
+  text-align: center;
+}
+.hero-bg-text {
+  position: absolute;
+  font-family: var(--serif);
+  font-size: clamp(120px, 20vw, 280px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.03);
+  letter-spacing: -8px;
+  user-select: none;
+  pointer-events: none;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.hero-tree-left, .hero-tree-right {
+  position: absolute;
+  bottom: 0;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.hero-tree-left { left: 0; }
+.hero-tree-right { right: 0; transform: scaleX(-1); }
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #5DCAA5;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-eyebrow-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #5DCAA5;
+  position: relative;
+}
+.hero-eyebrow-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid #5DCAA5;
+  animation: pulse-ring 2s ease-out infinite;
+}
+.hero-h1 {
+  font-family: var(--serif);
+  font-size: clamp(48px, 8vw, 88px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.08;
+  letter-spacing: -2px;
+  margin-bottom: 28px;
+  max-width: 800px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero-h1 em {
+  color: #9FE1CB;
+  font-style: italic;
+}
+.hero-sub {
+  font-size: 18px;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.65;
+  max-width: 540px;
+  margin: 0 auto 48px;
+  font-weight: 300;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+.hero-form-wrap {
+  animation: fadeUp 0.8s 0.3s ease both;
+  width: 100%;
+  max-width: 480px;
+}
+.hero-counter {
+  display: inline-block;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 24px;
+  padding: 6px 16px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 20px;
+}
+.hero-form {
+  display: flex;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 32px;
+  padding: 6px 6px 6px 20px;
+  margin-bottom: 12px;
+  transition: border-color 0.2s;
+}
+.hero-form:focus-within {
+  border-color: rgba(255,255,255,0.4);
+}
+.hero-form input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: var(--white);
+  font-family: var(--sans);
+  min-width: 0;
+}
+.hero-form input::placeholder { color: rgba(255,255,255,0.4); }
+.hero-form button {
+  background: var(--white);
+  color: var(--deep);
+  border: none;
+  border-radius: 24px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.hero-form button:hover {
+  background: var(--mist);
+  transform: scale(1.02);
+}
+.hero-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.35);
+}
+.hero-success {
+  display: none;
+  font-size: 14px;
+  color: #9FE1CB;
+  margin-bottom: 8px;
+  padding: 10px;
+}
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 56px;
+  margin-top: 72px;
+  flex-wrap: wrap;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+.hero-stat {
+  text-align: center;
+  position: relative;
+}
+.hero-stat:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -28px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.12);
+}
+.hero-stat-val {
+  font-family: var(--serif);
+  font-size: 36px;
+  color: var(--white);
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+.hero-stat-lbl {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.scroll-indicator {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.4;
+  animation: fadeIn 1s 1s ease both;
+}
+.scroll-indicator span {
+  font-size: 10px;
+  color: var(--white);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  background: var(--white);
+  animation: scroll-line 2s ease-in-out infinite;
+}
+
+/* ── Section Base ───────────────────────────────────── */
+.section {
+  padding: 96px 48px;
+}
+.section-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+.section-alt { background: var(--white); }
+.section-dark { background: var(--deep); }
+.section-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--forest);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 12px;
+  text-align: center;
+}
+.section-h2 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: -1px;
+  text-align: center;
+  line-height: 1.15;
+  margin-bottom: 14px;
+}
+.section-dark .section-h2 { color: var(--white); }
+.section-sub {
+  font-size: 16px;
+  color: var(--mid-gray);
+  text-align: center;
+  max-width: 540px;
+  margin: 0 auto 64px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+.section-dark .section-sub { color: rgba(255,255,255,0.55); }
+
+/* ── Problems ───────────────────────────────────────── */
+.problems-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+.problem-card {
+  background: var(--off-white);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--light-gray);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.problem-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(8,80,65,0.08);
+}
+.problem-num {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 400;
+  opacity: 0.2;
+  line-height: 1;
+  margin-bottom: 16px;
+}
+.problem-title {
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.problem-body {
+  font-size: 14px;
+  color: var(--mid-gray);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ── How it works ───────────────────────────────────── */
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+@media (max-width: 768px) { .demo-layout { grid-template-columns: 1fr; } }
+.phone-wrap {
+  display: flex;
+  justify-content: center;
+  animation: float 5s ease-in-out infinite;
+}
+.phone {
+  width: 260px;
+  background: var(--white);
+  border-radius: 38px;
+  border: 7px solid #1a1a1a;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(8,80,65,0.2), 0 0 0 1px rgba(255,255,255,0.1);
+}
+.p-notch {
+  height: 28px;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.p-notch-bar {
+  width: 80px;
+  height: 10px;
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+.p-nav {
+  background: var(--deep);
+  padding: 12px 16px 14px;
+}
+.p-logo { color: var(--white); font-family: var(--serif); font-size: 17px; }
+.p-sub { color: rgba(255,255,255,0.55); font-size: 9px; margin-top: 1px; }
+.p-body {
+  background: #f7f6f2;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 320px;
+}
+.p-ai {
+  background: var(--white);
+  border-radius: 14px 14px 14px 4px;
+  padding: 10px 12px;
+  font-size: 10.5px;
+  color: var(--dark);
+  line-height: 1.5;
+  max-width: 88%;
+  border: 1px solid #e8e7e2;
+}
+.p-user {
+  background: var(--forest);
+  border-radius: 14px 14px 4px 14px;
+  padding: 10px 12px;
+  font-size: 10.5px;
+  color: var(--white);
+  line-height: 1.5;
+  max-width: 80%;
+  align-self: flex-end;
+}
+.p-chips {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.p-chip {
+  background: var(--mist);
+  border: 1px solid #9FE1CB;
+  border-radius: 20px;
+  padding: 4px 9px;
+  font-size: 9px;
+  color: var(--deep);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.p-chip:hover { background: #9FE1CB; }
+.p-trail-card {
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e8e7e2;
+}
+.p-trail-hdr { background: var(--deep); padding: 10px 12px; }
+.p-trail-name { color: var(--white); font-size: 11px; font-weight: 500; }
+.p-trail-meta { color: rgba(255,255,255,0.6); font-size: 8.5px; margin-top: 2px; }
+.p-trail-body { padding: 10px 12px; }
+.p-metrics { display: flex; gap: 5px; margin-bottom: 8px; }
+.p-metric {
+  flex: 1;
+  border-radius: 7px;
+  padding: 5px 4px;
+  text-align: center;
+}
+.p-metric-lbl { font-size: 7.5px; }
+.p-metric-val { font-size: 9.5px; font-weight: 500; margin-top: 1px; }
+.p-suggest {
+  background: var(--mist);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+.p-suggest-lbl { font-size: 8px; color: var(--deep); font-weight: 500; margin-bottom: 2px; }
+.p-suggest-txt { font-size: 9.5px; color: var(--mid); line-height: 1.4; }
+.p-cta {
+  background: var(--forest);
+  border-radius: 9px;
+  padding: 9px;
+  text-align: center;
+  color: var(--white);
+  font-size: 11px;
+  font-weight: 500;
+}
+.demo-text h3 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+.demo-body {
+  font-size: 15px;
+  color: var(--mid-gray);
+  line-height: 1.75;
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+.demo-features {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.demo-feat {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--dark);
+  line-height: 1.5;
+}
+.demo-feat-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--mist);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.demo-feat-dot svg { width: 10px; height: 10px; }
+
+/* ── Activities ─────────────────────────────────────── */
+.activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+}
+.activity-card {
+  background: var(--off-white);
+  border-radius: 16px;
+  padding: 24px 20px;
+  border: 1px solid var(--light-gray);
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.activity-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.activity-card:nth-child(1)::before { background: var(--forest); }
+.activity-card:nth-child(2)::before { background: #3B6D11; }
+.activity-card:nth-child(3)::before { background: var(--bark); }
+.activity-card:nth-child(4)::before { background: #534AB7; }
+.activity-card:nth-child(5)::before { background: var(--dawn); }
+.activity-card:nth-child(6)::before { background: #185FA5; }
+.activity-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(8,80,65,0.1);
+  border-color: transparent;
+}
+.act-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.act-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 8px;
+}
+.act-body {
+  font-size: 13px;
+  color: var(--mid-gray);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ── Founders ───────────────────────────────────────── */
+.founders-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+@media (max-width: 640px) { .founders-layout { grid-template-columns: 1fr; } }
+.founder-card {
+  background: var(--off-white);
+  border-radius: 20px;
+  padding: 36px;
+  border: 1px solid var(--light-gray);
+  position: relative;
+  overflow: hidden;
+}
+.founder-top-accent {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+}
+.founder-avatar {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--white);
+  margin-bottom: 18px;
+  font-weight: 400;
+}
+.founder-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--dark);
+  margin-bottom: 4px;
+}
+.founder-role {
+  font-size: 12px;
+  color: var(--stone);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.founder-body {
+  font-size: 14px;
+  color: var(--mid-gray);
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+.founder-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 24px;
+}
+.hh-block {
+  background: var(--deep);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hh-block::before {
+  content: '♡';
+  position: absolute;
+  font-size: 200px;
+  color: rgba(255,255,255,0.02);
+  bottom: -40px;
+  right: -20px;
+  pointer-events: none;
+}
+.hh-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #5DCAA5;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+.hh-num {
+  font-family: var(--serif);
+  font-size: 64px;
+  color: var(--white);
+  font-weight: 400;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.hh-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--white);
+  font-weight: 400;
+  margin-bottom: 14px;
+}
+.hh-body {
+  font-size: 14px;
+  color: rgba(255,255,255,0.6);
+  max-width: 540px;
+  margin: 0 auto;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ── Testimonials ───────────────────────────────────── */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+.testimonial-card {
+  background: var(--off-white);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--light-gray);
+}
+.t-stars {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 14px;
+}
+.t-star {
+  width: 14px; height: 14px;
+  background: var(--bark);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+.t-quote {
+  font-size: 15px;
+  color: var(--dark);
+  line-height: 1.75;
+  margin-bottom: 18px;
+  font-style: italic;
+  font-family: var(--serif);
+  font-weight: 400;
+}
+.t-author {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--mid-gray);
+}
+.t-location {
+  font-size: 12px;
+  color: var(--stone);
+  margin-top: 2px;
+}
+
+/* ── Pricing ────────────────────────────────────────── */
+.pricing-row {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.price-card {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 32px;
+  border: 1px solid var(--light-gray);
+  width: 100%;
+  max-width: 300px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.price-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(8,80,65,0.08);
+}
+.price-card.featured {
+  border: 2px solid var(--forest);
+  background: var(--off-white);
+  transform: scale(1.03);
+}
+.price-card.featured:hover {
+  transform: scale(1.03) translateY(-4px);
+}
+.price-popular {
+  display: inline-block;
+  background: var(--mist);
+  color: var(--deep);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.price-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+.price-amount {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 400;
+  color: var(--dark);
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.price-per {
+  font-size: 13px;
+  color: var(--stone);
+  margin-bottom: 24px;
+}
+.price-divider {
+  border: none;
+  border-top: 1px solid var(--light-gray);
+  margin-bottom: 20px;
+}
+.price-feat {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--mid-gray);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.price-check {
+  width: 16px; height: 16px;
+  background: var(--mist);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.price-check svg { width: 8px; height: 8px; }
+.price-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  margin-top: 24px;
+  transition: all 0.2s;
+  border: none;
+}
+.price-btn-outline {
+  background: transparent;
+  border: 1px solid var(--light-gray);
+  color: var(--dark);
+}
+.price-btn-outline:hover { border-color: var(--forest); color: var(--forest); }
+.price-btn-fill {
+  background: var(--forest);
+  color: var(--white);
+}
+.price-btn-fill:hover {
+  background: var(--deep);
+  box-shadow: 0 4px 16px rgba(29,158,117,0.35);
+}
+
+/* ── CTA Section ────────────────────────────────────── */
+.cta-section {
+  background: var(--deep);
+  padding: 96px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-mountain {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.cta-h2 {
+  font-family: var(--serif);
+  font-size: clamp(36px, 5vw, 60px);
+  font-weight: 400;
+  color: var(--white);
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  position: relative;
+}
+.cta-sub {
+  font-size: 17px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 40px;
+  line-height: 1.65;
+  font-weight: 300;
+  position: relative;
+}
+.cta-form {
+  display: flex;
+  gap: 8px;
+  max-width: 460px;
+  margin: 0 auto 14px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 32px;
+  padding: 6px 6px 6px 20px;
+  transition: border-color 0.2s;
+  position: relative;
+}
+.cta-form:focus-within { border-color: rgba(255,255,255,0.38); }
+.cta-form input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 15px;
+  color: var(--white);
+  font-family: var(--sans);
+  min-width: 0;
+}
+.cta-form input::placeholder { color: rgba(255,255,255,0.38); }
+.cta-form button {
+  background: var(--white);
+  color: var(--deep);
+  border: none;
+  border-radius: 24px;
+  padding: 11px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--sans);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.cta-form button:hover { background: var(--mist); }
+.cta-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  position: relative;
+}
+.cta-success {
+  display: none;
+  font-size: 14px;
+  color: #9FE1CB;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+/* ── Footer ─────────────────────────────────────────── */
+footer {
+  background: var(--dark);
+  padding: 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.footer-logo-mark {
+  width: 30px; height: 30px;
+  background: var(--forest);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--white);
+}
+.footer-logo-name {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--white);
+  font-weight: 400;
+}
+.footer-links { display: flex; gap: 24px; }
+.footer-link {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-link:hover { color: rgba(255,255,255,0.8); }
+.footer-handles { display: flex; gap: 16px; }
+.footer-handle { font-size: 13px; color: #5DCAA5; font-weight: 500; }
+.footer-copy {
+  width: 100%;
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+/* ── Utility ────────────────────────────────────────── */
+.text-center { text-align: center; }
+@media (max-width: 768px) {
+  nav { padding: 14px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .section { padding: 64px 24px; }
+  .hero-stats { gap: 32px; }
+  .hero-stat:not(:last-child)::after { display: none; }
+  .demo-layout { gap: 48px; }
+  footer { padding: 32px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────── -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark">W</div>
+    <span class="nav-logo-name">Wander</span>
+  </a>
+  <div class="nav-links">
+    <a href="#how" class="nav-link">How it works</a>
+    <a href="#activities" class="nav-link">Kids activities</a>
+    <a href="#mission" class="nav-link">Our story</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#waitlist" class="nav-cta">Join the waitlist</a>
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────── -->
+<section class="hero" id="waitlist">
+  <div class="hero-bg-text">Wander</div>
+
+  <!-- Decorative trees -->
+  <svg class="hero-tree-left" width="200" height="400" viewBox="0 0 200 400" fill="none">
+    <path d="M100 380V200M100 200L40 320M100 200L160 320M100 200L20 280M100 200L180 280M100 250L60 340M100 250L140 340M100 300L70 370M100 300L130 370" stroke="white" stroke-width="2"/>
+    <path d="M100 200L30 240L100 160L170 240L100 200Z" fill="white" opacity="0.5"/>
+    <path d="M100 250L20 300L100 200L180 300L100 250Z" fill="white" opacity="0.4"/>
+    <path d="M100 300L10 360L100 250L190 360L100 300Z" fill="white" opacity="0.3"/>
+  </svg>
+  <svg class="hero-tree-right" width="200" height="400" viewBox="0 0 200 400" fill="none">
+    <path d="M100 380V200M100 200L40 320M100 200L160 320M100 200L20 280M100 200L180 280M100 250L60 340M100 250L140 340M100 300L70 370M100 300L130 370" stroke="white" stroke-width="2"/>
+    <path d="M100 200L30 240L100 160L170 240L100 200Z" fill="white" opacity="0.5"/>
+    <path d="M100 250L20 300L100 200L180 300L100 250Z" fill="white" opacity="0.4"/>
+    <path d="M100 300L10 360L100 250L190 360L100 300Z" fill="white" opacity="0.3"/>
+  </svg>
+
+  <div class="hero-eyebrow">
+    <div class="hero-eyebrow-dot"></div>
+    Pacific Northwest family hiking
+  </div>
+
+  <h1 class="hero-h1">
+    When are we<br><em>going again?</em>
+  </h1>
+
+  <p class="hero-sub">
+    The AI-powered hiking companion that makes trails exciting for kids — and effortless for parents. Find the perfect hike, keep kids engaged, build a habit that lasts.
+  </p>
+
+  <div class="hero-form-wrap">
+    <div class="hero-counter" id="hero-counter">Join 247 families on the waitlist</div>
+    <div class="hero-form">
+      <input type="email" id="hero-email" placeholder="Your email address">
+      <button onclick="joinWaitlist('hero-email','hero-success','hero-counter')">Join free</button>
+    </div>
+    <div class="hero-success" id="hero-success">You're on the list! We'll be in touch soon.</div>
+    <p class="hero-note">Free to join · No spam · Launching in the Pacific Northwest</p>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-val">1,847</div>
+      <div class="hero-stat-lbl">Monthly active hikers</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">147</div>
+      <div class="hero-stat-lbl">H&amp;H hikes funded</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-val">1,000+</div>
+      <div class="hero-stat-lbl">PNW trails</div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ── Problem ──────────────────────────────────────── -->
+<section class="section" id="problem">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">The problem</p>
+    <h2 class="section-h2 reveal reveal-delay-1">Sound familiar?</h2>
+    <p class="section-sub reveal reveal-delay-2">Four things keep families from making hiking a habit. Wander solves all four.</p>
+    <div class="problems-grid">
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="problem-num" style="color:var(--dawn);">01</div>
+        <div class="problem-title">Screens are winning</div>
+        <div class="problem-body">Kids average 7+ hours on devices every day. Parents know it's a problem and feel stuck. The trail is right there — but so is the phone.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="problem-num" style="color:var(--bark);">02</div>
+        <div class="problem-title">"Hiking is boring"</div>
+        <div class="problem-body">There's nothing for kids to do on the trail. Adults hike. Kids endure. By the time you're back at the car, the phones are already out.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="problem-num" style="color:var(--stone);">03</div>
+        <div class="problem-title">Where do we even go?</div>
+        <div class="problem-body">Researching a hike takes 45 minutes. Is it too hard? Is there parking? Is it safe for a 4-year-old? The planning alone kills the momentum.</div>
+      </div>
+      <div class="problem-card reveal reveal-delay-4">
+        <div class="problem-num" style="color:var(--forest);">04</div>
+        <div class="problem-title">The bar feels too high</div>
+        <div class="problem-body">"What if we're not prepared?" keeps families at home. Wander removes every excuse — and every bit of friction — between your couch and the trailhead.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How it works ─────────────────────────────────── -->
+<section class="section section-alt" id="how">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">How it works</p>
+    <h2 class="section-h2 reveal reveal-delay-1">From the couch to the trailhead<br>in under 60 seconds</h2>
+    <p class="section-sub reveal reveal-delay-2">No forms. No dropdowns. Just tell Wander what you need.</p>
+
+    <div class="demo-layout reveal">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="p-notch"><div class="p-notch-bar"></div></div>
+          <div class="p-nav">
+            <div class="p-logo">Wander</div>
+            <div class="p-sub">where should I hike?</div>
+          </div>
+          <div class="p-body">
+            <div class="p-ai">Hey! Tell me your vibe for today's hike — or just describe what you're looking for.</div>
+            <div class="p-chips">
+              <span class="p-chip">Easy + scenic</span>
+              <span class="p-chip">Toddler-friendly</span>
+              <span class="p-chip">Waterfall</span>
+            </div>
+            <div class="p-user">Easy hike, kids are 4 and 7</div>
+            <div class="p-ai">Love it. How far from Seattle are you willing to drive?</div>
+            <div class="p-chips">
+              <span class="p-chip">Under 30 min</span>
+              <span class="p-chip">30–60 min</span>
+              <span class="p-chip">Up to 90 min</span>
+            </div>
+            <div class="p-user">Under 30 min</div>
+            <div class="p-trail-card">
+              <div class="p-trail-hdr">
+                <div class="p-trail-name">Rattlesnake Ledge</div>
+                <div class="p-trail-meta">North Bend · 22 min drive · 4.0 mi out-and-back</div>
+              </div>
+              <div class="p-trail-body">
+                <div class="p-metrics">
+                  <div class="p-metric" style="background:#E1F5EE;">
+                    <div class="p-metric-lbl" style="color:#085041;">Drive</div>
+                    <div class="p-metric-val" style="color:#085041;">Easy</div>
+                  </div>
+                  <div class="p-metric" style="background:#EAF3DE;">
+                    <div class="p-metric-lbl" style="color:#27500A;">Trail</div>
+                    <div class="p-metric-val" style="color:#27500A;">Mod</div>
+                  </div>
+                  <div class="p-metric" style="background:#FAEEDA;">
+                    <div class="p-metric-lbl" style="color:#633806;">Park</div>
+                    <div class="p-metric-val" style="color:#633806;">Busy</div>
+                  </div>
+                </div>
+                <div class="p-suggest">
+                  <div class="p-suggest-lbl">I suggest this because...</div>
+                  <div class="p-suggest-txt">The 4-yr-old will love the creek crossing. Go before 9am — parking fills fast.</div>
+                </div>
+                <div class="p-cta">Let's go →</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-text">
+        <h3>The trail finder that thinks like a local</h3>
+        <p class="demo-body">Natural language in, perfect trail out. Wander asks exactly the right follow-up questions, checks live weather, and recommends the right hike for your family — today, right now, conditions considered.</p>
+        <div class="demo-features">
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            Natural language — no filters or dropdowns
+          </div>
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            Live weather check before every suggestion
+          </div>
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            Color-coded drive, trail difficulty, and parking ratings
+          </div>
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            "I suggest because..." — a guide, not an algorithm
+          </div>
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            One tap to directions + personalized pack list
+          </div>
+          <div class="demo-feat">
+            <div class="demo-feat-dot">
+              <svg viewBox="0 0 10 10" fill="none"><path d="M2 5L4.5 7.5L8 2.5" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            Kids activities pre-loaded before you even leave home
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Kids Activities ──────────────────────────────── -->
+<section class="section" id="activities">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">Kids activities</p>
+    <h2 class="section-h2 reveal reveal-delay-1">Make the trail as exciting<br>as anything on a screen</h2>
+    <p class="section-sub reveal reveal-delay-2">Wander turns every hike into an adventure — with activities, achievements, and surprises built into the trail itself.</p>
+    <div class="activities-grid">
+      <div class="activity-card reveal reveal-delay-1">
+        <div class="act-icon" style="background:#E1F5EE;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 14L6 9L9 12L12 6L15 10" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="act-title">Draw a picture</div>
+        <div class="act-body">Trail-specific sketching prompts keep little hands busy and minds fully present on the trail.</div>
+      </div>
+      <div class="activity-card reveal reveal-delay-2">
+        <div class="act-icon" style="background:#EAF3DE;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 4 6 4 10.5C4 13.2 6.2 15 9 15C11.8 15 14 13.2 14 10.5C14 6 9 2 9 2Z" stroke="#3B6D11" stroke-width="1.5" fill="none"/></svg>
+        </div>
+        <div class="act-title">Plant &amp; animal ID</div>
+        <div class="act-body">Point your camera at anything. AI identifies it and shares a fact your kid will actually remember forever.</div>
+      </div>
+      <div class="activity-card reveal reveal-delay-3">
+        <div class="act-icon" style="background:#FAEEDA;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="4" y="8" width="10" height="7" rx="2" stroke="#854F0B" stroke-width="1.5" fill="none"/><path d="M7 8V6C7 4.3 7.9 3 9 3C10.1 3 11 4.3 11 6V8" stroke="#854F0B" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="act-title">Snack attack</div>
+        <div class="act-body">Location-triggered snack breaks with surprise challenges. Unlocks at the creek crossing, halfway point, or summit.</div>
+      </div>
+      <div class="activity-card reveal reveal-delay-1">
+        <div class="act-icon" style="background:#EEEDFE;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><polygon points="9,2 11.5,7 17,7 12.5,10.5 14.5,16 9,12.5 3.5,16 5.5,10.5 1,7 6.5,7" stroke="#534AB7" stroke-width="1.3" fill="none"/></svg>
+        </div>
+        <div class="act-title">Level up badges</div>
+        <div class="act-body">Earn points, unlock badges, climb the family leaderboard. The kids always beat the parents. Always.</div>
+      </div>
+      <div class="activity-card reveal reveal-delay-2">
+        <div class="act-icon" style="background:#FAECE7;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 14L9 4L14 14" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10.5H12" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div class="act-title">Rise for the prize</div>
+        <div class="act-body">Complete goals on trail and earn real rewards. Because summits deserve more than just a photo.</div>
+      </div>
+      <div class="activity-card reveal reveal-delay-3">
+        <div class="act-icon" style="background:#E6F1FB;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="5" cy="5" r="2.5" stroke="#185FA5" stroke-width="1.3" fill="none"/><circle cx="13" cy="9" r="2.5" stroke="#185FA5" stroke-width="1.3" fill="none"/><circle cx="7" cy="14" r="2.5" stroke="#185FA5" stroke-width="1.3" fill="none"/><path d="M7.5 5H10.5M9 11.5H10M5 7.5V11" stroke="#185FA5" stroke-width="1" stroke-linecap="round"/></svg>
+        </div>
+        <div class="act-title">Connect the dots</div>
+        <div class="act-body">Key spots along the trail — each with a story, a photo, and a hidden geocache waiting to be found.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Testimonials ─────────────────────────────────── -->
+<section class="section section-alt">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">Early families</p>
+    <h2 class="section-h2 reveal reveal-delay-1">What PNW families are saying</h2>
+    <p class="section-sub reveal reveal-delay-2">Beta families who've been hiking with Wander since day one.</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="t-stars">
+          <div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div>
+        </div>
+        <div class="t-quote">"We used to spend Sunday mornings arguing about where to go. Now my 6-year-old opens Wander before I even have coffee."</div>
+        <div class="t-author">Sarah M.</div>
+        <div class="t-location">Bellevue, WA · Mom of 2</div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="t-stars">
+          <div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div>
+        </div>
+        <div class="t-quote">"My son identified 14 different plants on Rattlesnake Ledge. He still talks about the sword fern fact three weeks later."</div>
+        <div class="t-author">Marcus T.</div>
+        <div class="t-location">Sammamish, WA · Dad of 3</div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-3">
+        <div class="t-stars">
+          <div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div><div class="t-star"></div>
+        </div>
+        <div class="t-quote">"The geocache at Twin Falls made my daughter cry happy tears. She's been asking to go back every single weekend since."</div>
+        <div class="t-author">Jennifer K.</div>
+        <div class="t-location">Kirkland, WA · Mom of 1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Founders ──────────────────────────────────────── -->
+<section class="section" id="mission">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">Our story</p>
+    <h2 class="section-h2 reveal reveal-delay-1">Built by people who live this</h2>
+    <p class="section-sub reveal reveal-delay-2">Two brothers. One in the Cascades. One in Shenandoah. Same problem, different mountains.</p>
+
+    <div class="founders-layout reveal">
+      <div class="founder-card">
+        <div class="founder-top-accent" style="background:var(--forest);"></div>
+        <div class="founder-avatar" style="background:var(--forest);">R</div>
+        <div class="founder-name">Ryan</div>
+        <div class="founder-role">Founder · CEO · Sammamish, WA</div>
+        <p class="founder-body">Born and raised in Seattle, raising two kids in Sammamish with the Cascades as the backyard. After 25 years in corporate life, I kept noticing the same thing: we'd have a great hike, get back to the car, and the phones would come out immediately. The trail was already forgotten.<br><br>Wander started as a simple question — what if the trail itself was as engaging as anything on a screen?</p>
+        <span class="founder-location" style="background:var(--mist);color:var(--deep);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1C4.1 1 2.5 2.5 2.5 4.5C2.5 7.5 6 11 6 11C6 11 9.5 7.5 9.5 4.5C9.5 2.5 7.9 1 6 1Z" stroke="#085041" stroke-width="1"/></svg>
+          Rattlesnake Ledge regular
+        </span>
+      </div>
+      <div class="founder-card">
+        <div class="founder-top-accent" style="background:var(--bark);"></div>
+        <div class="founder-avatar" style="background:var(--bark);">K</div>
+        <div class="founder-name">Kevin</div>
+        <div class="founder-role">Co-founder · Charlottesville, VA</div>
+        <p class="founder-body">Born in Seattle, now living in Charlottesville with Shenandoah National Park out the back door. Left the Pacific Northwest — but never left the trails. When Ryan described the problem, I recognized it immediately from 2,700 miles away.<br><br>Same hikes. Same disengaged kids. Different mountains. That phone call is when Wander stopped being a Seattle app.</p>
+        <span class="founder-location" style="background:var(--bark-light);color:var(--bark);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1C4.1 1 2.5 2.5 2.5 4.5C2.5 7.5 6 11 6 11C6 11 9.5 7.5 9.5 4.5C9.5 2.5 7.9 1 6 1Z" stroke="#854F0B" stroke-width="1"/></svg>
+          Shenandoah hiker
+        </span>
+      </div>
+    </div>
+
+    <div class="hh-block reveal">
+      <div class="hh-label">Hands &amp; Heart Hiking Club</div>
+      <div class="hh-num">147</div>
+      <div class="hh-title">kids taken hiking who couldn't otherwise go.</div>
+      <p class="hh-body">Every Wander subscription funds a hike for an underprivileged family — transportation, food, gear, and a guide. All included. When your kids complete activities and earn points, they sponsor real hikes for kids who've never seen a mountain. Your trail time creates someone else's first time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Pricing ───────────────────────────────────────── -->
+<section class="section section-alt" id="pricing">
+  <div class="section-inner">
+    <p class="section-eyebrow reveal">Pricing</p>
+    <h2 class="section-h2 reveal reveal-delay-1">Start free. Upgrade when you're hooked.</h2>
+    <p class="section-sub reveal reveal-delay-2">Every plan includes the AI trail finder and kids activities. Upgrade for the full Wander experience.</p>
+
+    <div class="pricing-row reveal">
+      <div class="price-card">
+        <div class="price-name">Free</div>
+        <div class="price-amount">$0</div>
+        <div class="price-per">always free</div>
+        <hr class="price-divider">
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>Basic AI trail finder</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>3 kids activities per hike</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>Badges + family leaderboard</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>2 trail recommendations per month</div>
+        <button class="price-btn price-btn-outline" onclick="scrollToWaitlist()">Join the waitlist</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-popular">Most popular</div>
+        <div class="price-name">Trail family</div>
+        <div class="price-amount">$9<span style="font-size:24px;">.99</span></div>
+        <div class="price-per">per month · or $89/year</div>
+        <hr class="price-divider">
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>Full AI trail finder + live weather</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>Weekly surprise activity drops</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>1 free guided tour every summer</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>Sponsor a hike when you hit goals</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg></div>10% off the Hiking Hut</div>
+        <button class="price-btn price-btn-fill" onclick="scrollToWaitlist()">Join the waitlist</button>
+      </div>
+
+      <div class="price-card">
+        <div class="price-name">Summit</div>
+        <div class="price-amount">$19<span style="font-size:24px;">.99</span></div>
+        <div class="price-per">per month · or $169/year</div>
+        <hr class="price-divider">
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#854F0B" stroke-width="1.3" stroke-linecap="round"/></svg></div>Everything in Trail family</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#854F0B" stroke-width="1.3" stroke-linecap="round"/></svg></div>Quarterly gear box shipped to you</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#854F0B" stroke-width="1.3" stroke-linecap="round"/></svg></div>2 free guided tours per summer</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#854F0B" stroke-width="1.3" stroke-linecap="round"/></svg></div>20% off the Hiking Hut</div>
+        <div class="price-feat"><div class="price-check"><svg viewBox="0 0 8 8" fill="none"><path d="M1 4L3.2 6.2L7 1.5" stroke="#854F0B" stroke-width="1.3" stroke-linecap="round"/></svg></div>Early access to new trails + features</div>
+        <button class="price-btn price-btn-outline" onclick="scrollToWaitlist()">Join the waitlist</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ──────────────────────────────────────────── -->
+<section class="cta-section">
+  <svg class="cta-mountain" viewBox="0 0 1440 200" fill="none" preserveAspectRatio="none">
+    <path d="M0 200L200 80L400 140L600 20L800 100L1000 40L1200 120L1440 60V200H0Z" fill="white"/>
+  </svg>
+  <h2 class="cta-h2 reveal">The trail is waiting.</h2>
+  <p class="cta-sub reveal reveal-delay-1">Join hundreds of Pacific Northwest families already on the list.<br>We're launching soon — be first in line.</p>
+  <div class="cta-form reveal reveal-delay-2">
+    <input type="email" id="cta-email" placeholder="Your email address">
+    <button onclick="joinWaitlist('cta-email','cta-success','cta-counter')">Join free</button>
+  </div>
+  <div class="cta-success" id="cta-success">You're in! Welcome to the Wander family.</div>
+  <p class="cta-note reveal reveal-delay-3">Free to join · No spam · Unsubscribe anytime</p>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────── -->
+<footer>
+  <a href="#" class="footer-logo">
+    <div class="footer-logo-mark">W</div>
+    <span class="footer-logo-name">Wander</span>
+  </a>
+  <div class="footer-links">
+    <a href="#" class="footer-link">wanderhikes.com</a>
+    <a href="mailto:hello@wanderhikes.com" class="footer-link">hello@wanderhikes.com</a>
+    <a href="#" class="footer-link">Privacy</a>
+  </div>
+  <div class="footer-handles">
+    <span class="footer-handle">@WanderHikesHQ</span>
+    <span class="footer-handle">@WanderHikes</span>
+  </div>
+  <div class="footer-copy">
+    © 2025 Wander · Pacific Northwest family hiking · wanderhikes.com
+  </div>
+</footer>
+
+<script>
+let count = 247;
+
+function joinWaitlist(inputId, successId) {
+  const input = document.getElementById(inputId);
+  const success = document.getElementById(successId);
+  const email = (input.value || '').trim();
+  if (!email || !email.includes('@')) {
+    input.style.color = '#D85A30';
+    input.value = '';
+    input.placeholder = 'Please enter a valid email';
+    setTimeout(() => {
+      input.style.color = '';
+      input.placeholder = 'Your email address';
+    }, 2500);
+    return;
+  }
+  count++;
+  const counter = document.getElementById('hero-counter');
+  if (counter) counter.textContent = 'Join ' + count + ' families on the waitlist';
+  input.value = '';
+  success.style.display = 'block';
+  setTimeout(() => { success.style.display = 'none'; }, 5000);
+}
+
+function scrollToWaitlist() {
+  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Nav scroll effect
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if (window.scrollY > 40) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+});
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+</script>
+</body>
+</html>
