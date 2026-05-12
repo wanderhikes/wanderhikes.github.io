@@ -1087,7 +1087,7 @@ footer {
     <a href="#how" class="nav-link">How it works</a>
     <a href="#activities" class="nav-link">Kids activities</a>
     <a href="#mission" class="nav-link">Our story</a>
-    <a href="#waitlist" class="nav-cta">Join the waitlist</a>
+    <a href="#waitlist" class="nav-cta">Get early access</a>
   </div>
 </nav>
 
@@ -1111,7 +1111,7 @@ footer {
 
   <div class="hero-eyebrow">
     <div class="hero-eyebrow-dot"></div>
-    Pacific Northwest family hiking
+    Now accepting early access families
   </div>
 
   <h1 class="hero-h1">
@@ -1119,16 +1119,16 @@ footer {
   </h1>
 
   <p class="hero-sub">
-    The AI-powered hiking companion that makes trails exciting for kids — and effortless for parents. Find the perfect hike, keep kids engaged, build a habit that lasts.
+    The AI-powered hiking app for PNW families. Find the perfect trail, keep kids genuinely engaged, and build a habit your whole family loves.
   </p>
 
   <div class="hero-form-wrap">
     <div class="hero-form">
       <input type="email" id="hero-email" placeholder="Your email address">
-      <button onclick="joinWaitlist('hero-email','hero-success','hero-counter')">Join free</button>
+      <button onclick="joinWaitlist('hero-email','hero-success')">Get early access →</button>
     </div>
-    <div class="hero-success" id="hero-success">You're on the list! We'll be in touch soon.</div>
-    <p class="hero-note">Free to join · No spam · Launching in the Pacific Northwest</p>
+    <div class="hero-success" id="hero-success">🥾 Almost there! We opened a quick confirmation tab — takes 5 seconds.</div>
+    <p class="hero-note">Free · No spam · Be the first family on the trail</p>
   </div>
 
 
@@ -1363,13 +1363,13 @@ footer {
     <path d="M0 200L200 80L400 140L600 20L800 100L1000 40L1200 120L1440 60V200H0Z" fill="white"/>
   </svg>
   <h2 class="cta-h2 reveal">The trail is waiting.</h2>
-  <p class="cta-sub reveal reveal-delay-1">Join hundreds of Pacific Northwest families already on the list.<br>We're launching soon — be first in line.</p>
+  <p class="cta-sub reveal reveal-delay-1">Be among the first PNW families to get access.<br>Enter your email and we'll save your spot.</p>
   <div class="cta-form reveal reveal-delay-2">
     <input type="email" id="cta-email" placeholder="Your email address">
-    <button onclick="joinWaitlist('cta-email','cta-success','cta-counter')">Join free</button>
+    <button onclick="joinWaitlist('cta-email','cta-success')">Get early access →</button>
   </div>
-  <div class="cta-success" id="cta-success">You're in! Welcome to the Wander family.</div>
-  <p class="cta-note reveal reveal-delay-3">Free to join · No spam · Unsubscribe anytime</p>
+  <div class="cta-success" id="cta-success">🥾 Almost there! We opened a quick confirmation tab — takes 5 seconds.</div>
+  <p class="cta-note reveal reveal-delay-3">Free · No spam · Unsubscribe anytime</p>
 </section>
 
 <!-- ── Footer ───────────────────────────────────────── -->
@@ -1398,12 +1398,15 @@ function joinWaitlist(inputId, successId) {
   const email = (input.value || '').trim();
   if (!email || !email.includes('@')) {
     input.placeholder = 'Please enter a valid email';
-    setTimeout(() => { input.placeholder = 'Your email address'; }, 2500);
+    input.style.color = '#D85A30';
+    setTimeout(() => {
+      input.placeholder = 'Your email address';
+      input.style.color = '';
+    }, 2500);
     return;
   }
   input.value = '';
   const success = document.getElementById(successId);
-  success.textContent = "You're in! Check your email to confirm your spot.";
   success.style.display = 'block';
   window.open('http://eepurl.com/bsnTKJyZFR', '_blank');
 }
