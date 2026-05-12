@@ -1397,22 +1397,17 @@ let count = 247;
 
 function joinWaitlist(inputId, successId) {
   const input = document.getElementById(inputId);
-  const success = document.getElementById(successId);
   const email = (input.value || '').trim();
   if (!email || !email.includes('@')) {
-    input.style.color = '#D85A30';
-    input.value = '';
     input.placeholder = 'Please enter a valid email';
     setTimeout(() => {
-      input.style.color = '';
       input.placeholder = 'Your email address';
     }, 2500);
     return;
   }
-  count++;
-  const counter = document.getElementById('hero-counter');
-  if (counter) counter.textContent = 'Join ' + count + ' families on the waitlist';
+  window.open('http://eepurl.com/bsnTKJyZFR', '_blank');
   input.value = '';
+  const success = document.getElementById(successId);
   success.style.display = 'block';
   setTimeout(() => { success.style.display = 'none'; }, 5000);
 }
