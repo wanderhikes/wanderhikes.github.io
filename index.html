@@ -1400,20 +1400,30 @@ function joinWaitlist(inputId, successId) {
   const email = (input.value || '').trim();
   if (!email || !email.includes('@')) {
     input.placeholder = 'Please enter a valid email';
-    setTimeout(() => {
-      input.placeholder = 'Your email address';
-    }, 2500);
+    setTimeout(() => { input.placeholder = 'Your email address'; }, 2500);
     return;
   }
-  window.open('http://eepurl.com/bsnTKJyZFR', '_blank');
+  const form = document.createElement('form');
+  form.action = 'https://wanderhikes.us22.list-manage.com/subscribe/post?u=65c5544557b117afb5520dcbd&id=a5f4fa54a6&f_id=00bac2e1f0';
+  form.method = 'POST';
+  form.target = '_blank';
+  form.style.display = 'none';
+  const emailField = document.createElement('input');
+  emailField.name = 'EMAIL';
+  emailField.value = email;
+  const honeypot = document.createElement('input');
+  honeypot.name = 'b_65c5544557b117afb5520dcbd_a5f4fa54a6';
+  honeypot.value = '';
+  honeypot.tabIndex = -1;
+  form.appendChild(emailField);
+  form.appendChild(honeypot);
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
   input.value = '';
   const success = document.getElementById(successId);
   success.style.display = 'block';
   setTimeout(() => { success.style.display = 'none'; }, 5000);
-}
-
-function scrollToWaitlist() {
-  document.getElementById('waitlist').scrollIntoView({ behavior: 'smooth' });
 }
 
 // Nav scroll effect
