@@ -1127,7 +1127,7 @@ footer {
       <input type="email" id="hero-email" placeholder="Your email address">
       <button onclick="joinWaitlist('hero-email','hero-success')">Get early access →</button>
     </div>
-    <div class="hero-success" id="hero-success">🥾 Almost there! We opened a quick confirmation tab — takes 5 seconds.</div>
+    <div class="hero-success" id="hero-success"></div>
     <p class="hero-note">Free · No spam · Be the first family on the trail</p>
   </div>
 
@@ -1368,7 +1368,7 @@ footer {
     <input type="email" id="cta-email" placeholder="Your email address">
     <button onclick="joinWaitlist('cta-email','cta-success')">Get early access →</button>
   </div>
-  <div class="cta-success" id="cta-success">🥾 Almost there! We opened a quick confirmation tab — takes 5 seconds.</div>
+  <div class="cta-success" id="cta-success"></div>
   <p class="cta-note reveal reveal-delay-3">Free · No spam · Unsubscribe anytime</p>
 </section>
 
@@ -1395,7 +1395,9 @@ footer {
 <script>
 function joinWaitlist(inputId, successId) {
   const input = document.getElementById(inputId);
+  const success = document.getElementById(successId);
   const email = (input.value || '').trim();
+
   if (!email || !email.includes('@')) {
     input.placeholder = 'Please enter a valid email';
     input.style.color = '#D85A30';
@@ -1405,10 +1407,43 @@ function joinWaitlist(inputId, successId) {
     }, 2500);
     return;
   }
-  input.value = '';
-  const success = document.getElementById(successId);
-  success.style.display = 'block';
-  window.open('http://eepurl.com/bsnTKJyZFR', '_blank');
+
+  // Disable input during submission
+  input.disabled = true;
+  const btn = input.nextElementSibling;
+  if (btn) { btn.disabled = true; btn.textContent = 'Joining...'; }
+
+  // Mailchimp JSONP submission — no redirect, no popup
+  const mcUrl = 'https://wanderhikes.us22.list-manage.com/subscribe/post-json?u=65c5544557b117afb5520dcbd&id=a5f4fa54a6&f_id=00bac2e1f0&EMAIL=' + encodeURIComponent(email) + '&c=mcCallback';
+
+  window.mcCallback = function(data) {
+    input.disabled = false;
+    if (btn) { btn.disabled = false; btn.textContent = 'Get early access →'; }
+    input.value = '';
+    if (data.result === 'success') {
+      success.textContent = "🥾 You're on the list! We'll be in touch soon.";
+      success.style.color = '#9FE1CB';
+    } else if (data.msg && data.msg.toLowerCase().includes('already subscribed')) {
+      success.textContent = "You're already on the list — we'll see you on the trail!";
+      success.style.color = '#9FE1CB';
+    } else {
+      success.textContent = "Something went wrong. Please try again.";
+      success.style.color = '#D85A30';
+    }
+    success.style.display = 'block';
+    setTimeout(() => { success.style.display = 'none'; }, 6000);
+    // Clean up script tag
+    const script = document.getElementById('mc-jsonp');
+    if (script) script.remove();
+  };
+
+  // Inject script tag to make the JSONP call
+  const existing = document.getElementById('mc-jsonp');
+  if (existing) existing.remove();
+  const script = document.createElement('script');
+  script.id = 'mc-jsonp';
+  script.src = mcUrl;
+  document.body.appendChild(script);
 }
 
 function scrollToWaitlist() {
